@@ -1,136 +1,238 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loading…</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+<title>METRO 2033</title>
+
+<style>
+/* ================= ОСНОВА ================= */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #050505;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+}
+
+/* ================= ЦЕНТРИРОВАНИЕ (GMOD SAFE) ================= */
+.screen {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+.cell {
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* ================= КОНТЕНТ ================= */
+.hero {
+    max-width: 980px;
+    margin: 0 auto;
+    padding-bottom: 120px;
+}
+
+/* ================= МЕТРО-ЛОГО (SVG) ================= */
+.metroMark {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    animation: metroPulse 3.5s ease-in-out infinite;
+}
+
+@keyframes metroPulse {
+    0%,100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+    50% { transform: scale(1.03); filter: drop-shadow(0 0 16px rgba(180,20,20,0.6)); }
+}
+
+/* ================= ЗАГОЛОВОК ================= */
+.title {
+    font-size: 68px;
+    letter-spacing: 12px;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+
+    /* пыльно-золотой, НЕ серый */
+    background: linear-gradient(
+        180deg,
+        #f2d9a2 0%,
+        #d6b26b 35%,
+        #9a6b2f 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    text-shadow:
+        0 2px 0 rgba(0,0,0,0.6),
+        0 14px 30px rgba(0,0,0,0.85);
+}
+
+/* ================= СТАТУС ================= */
+.status {
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: rgba(230,230,230,0.8);
+    margin-bottom: 24px;
+}
+
+/* ================= ЦИТАТА ================= */
+.quote {
+    font-size: 22px; /* уменьшено ~20% */
+    line-height: 1.55;
+    color: rgba(220,220,220,0.85);
+    max-width: 900px;
+    margin: 0 auto 18px;
+
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.quote.show {
+    opacity: 1;
+}
+
+/* ================= ТОЧКИ ================= */
+.pips span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 6px;
+    background: rgba(214,178,107,0.45);
+    border-radius: 50%;
+    animation: pip 1.6s infinite;
+}
+
+.pips span:nth-child(2){ animation-delay: .3s; }
+.pips span:nth-child(3){ animation-delay: .6s; }
+
+@keyframes pip {
+    0%,100% { opacity: .25; }
+    50% { opacity: .9; }
+}
+
+/* ================= OLD CLASSIC ================= */
+.footer {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+
+    font-size: 12px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+}
+
+/* ================= ФОН (ПОЛОСЫ + ШУМ) ================= */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            135deg,
+            rgba(255,255,255,0.025),
+            rgba(255,255,255,0.025) 2px,
+            transparent 2px,
+            transparent 18px
+        );
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.015),
+            rgba(255,255,255,0.015) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+    pointer-events: none;
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Фоны/эффекты -->
-  <div class="bg">
-    <div class="vignette"></div>
-    <div class="filmgrain"></div>
-    <div class="scanlines"></div>
-    <div class="dust"></div>
-    <div class="flicker"></div>
-  </div>
+<table class="screen">
+<tr>
+<td class="cell">
 
-  <!-- Центр -->
-  <main class="wrap" aria-label="Loading screen">
-    <section class="hero">
+    <div class="hero">
 
-      <!-- Значок метро (SVG, не плющит) -->
-      <div class="metroMark" aria-hidden="true">
-        <svg viewBox="0 0 256 256" role="img" focusable="false" preserveAspectRatio="xMidYMid meet">
-          <!-- Красный щит -->
-          <path d="M48 48c0-8.84 7.16-16 16-16h128c8.84 0 16 7.16 16 16v92c0 30.5-18.2 58.2-46.2 70.3L128 224l-33.8-13.7C66.2 198.2 48 170.5 48 140V48z"
-                fill="#b10b0b"/>
-          <path d="M56 52c0-6.6 5.4-12 12-12h120c6.6 0 12 5.4 12 12v88c0 27.2-16.3 52-41.3 62.8L128 214.5l-30.7-11.7C72.3 192 56 167.2 56 140V52z"
-                fill="#d11212" opacity="0.95"/>
+        <!-- МЕТРО М -->
+        <div class="metroMark">
+            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                <path d="M48 48h160v96c0 32-20 60-50 70l-30 12-30-12c-30-10-50-38-50-70V48z" fill="#c01414"/>
+                <path d="M80 176V96h24l24 36 24-36h24v80h-24v-44l-24 36-24-36v44H80z"
+                      fill="#ffecec"/>
+            </svg>
+        </div>
 
-          <!-- Буква М -->
-          <path d="M78 176V96c0-6 4.9-10.9 10.9-10.9h6.2c3.6 0 7 1.8 9 4.8l24 35.9 24-35.9c2-3 5.4-4.8 9-4.8h6.2c6 0 10.9 4.9 10.9 10.9v80h-20v-46.3l-20 30.1c-2 3-5.4 4.8-9 4.8s-7-1.8-9-4.8l-20-30.1V176H78z"
-                fill="#250000" opacity="0.35"/>
-          <path d="M76 176V94c0-6 4.9-10.9 10.9-10.9h6.2c3.6 0 7 1.8 9 4.8l25.7 38.5 25.7-38.5c2-3 5.4-4.8 9-4.8h6.2c6 0 10.9 4.9 10.9 10.9v82h-22v-49l-20.7 31c-2 3-5.4 4.8-9 4.8s-7-1.8-9-4.8l-20.7-31v49H76z"
-                fill="#ffeded" opacity="0.9"/>
+        <div class="title">METRO 2033</div>
 
-          <!-- Блик -->
-          <path d="M70 58c8-10 22-16 38-16h18c-24 4-44 18-56 36V58z" fill="#ffffff" opacity="0.10"/>
-        </svg>
-      </div>
+        <div class="status" id="status">Подключение к тоннелям…</div>
 
-      <h1 class="title">METRO&nbsp;2033</h1>
+        <div class="quote" id="quote"></div>
 
-      <div class="status" id="status">
-        Подключение к тоннелям<span class="dots" aria-hidden="true"></span>
-      </div>
+        <div class="pips">
+            <span></span><span></span><span></span>
+        </div>
 
-      <!-- ОДНА цитата (меняется периодически) -->
-      <blockquote class="quote" id="quote" aria-live="polite">
-        «Внизу не ищут света — здесь учатся не выдавать его.»
-      </blockquote>
+    </div>
 
-      <!-- Индикатор -->
-      <div class="pips" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span>
-      </div>
+</td>
+</tr>
+</table>
 
-    </section>
-  </main>
+<div class="footer">OLD&nbsp;CLASSIC</div>
 
-  <footer class="brand">OLD CLASSIC</footer>
+<script>
+const quotes = [
+  "«Внизу не ищут света — здесь учатся не выдавать его.»",
+  "«Тишина в тоннелях опаснее выстрела.»",
+  "«Метро — это не убежище. Это испытание.»",
+  "«Страх здесь не враг. Он инструмент.»",
+  "«Каждый шаг имеет цену.»",
+  "«Тьма не нападает. Она ждёт.»",
+  "«Выживание — это порядок.»",
+  "«Здесь будущее не обещают.»",
+  "«Надежда — роскошь.»",
+  "«Главное — дышать и слушать.»",
+  "«Мы живы, пока соблюдаем правила.»",
+  "«Ошибки в метро не исправляют.»",
+  "«Шагай тихо.»",
+  "«Выход не гарантирован.»",
+  "«Тоннели помнят всё.»"
+];
 
-  <script>
-    // 5 минут среднее подключение -> 20 сек на фразу = ~15 фраз
-    const QUOTES = [
-      "«Внизу не ищут света — здесь учатся не выдавать его.»",
-      "«Тишина — это язык метро. Громкость здесь звучит как приговор.»",
-      "«Если долго смотреть в туннель — он начнёт смотреть в ответ.»",
-      "«Мы живём не надеждой. Мы живём дисциплиной.»",
-      "«Смелость — это не шаг вперёд. Это шаг без лишнего звука.»",
-      "«В метро каждый вдох — как договор: ты берёшь воздух, а отдаёшь осторожность.»",
-      "«Страх не проходит. Он просто становится частью маршрута.»",
-      "«Главное правило выживших: не спорь с темнотой — приспосабливайся.»",
-      "«Здесь будущее не наступает. Оно ползёт по рельсам, скрипя металлом.»",
-      "«Когда гаснет свет — остаётся только порядок.»",
-      "«Внизу мы не мечтаем громко. Мечты здесь привлекают лишнее внимание.»",
-      "«Не верь эху: оно повторяет не тебя — оно проверяет тебя.»",
-      "«В метро человек узнаёт цену одной ошибки. Обычно — слишком поздно.»",
-      "«Снаружи был мир. Здесь — путь. И другого нам не оставили.»",
-      "«Если ты слышишь капли — значит, пока ещё слышишь.»"
-    ];
+const quoteEl = document.getElementById("quote");
+let i = 0;
 
-    const STATUSES = [
-      "Подключение к тоннелям",
-      "Проверка фильтров",
-      "Синхронизация маршрутов",
-      "Загрузка снаряжения",
-      "Стабилизация связи"
-    ];
+function showQuote() {
+    quoteEl.classList.remove("show");
+    setTimeout(() => {
+        quoteEl.textContent = quotes[i];
+        quoteEl.classList.add("show");
+        i = (i + 1) % quotes.length;
+    }, 600);
+}
 
-    const quoteEl = document.getElementById("quote");
-    const statusEl = document.getElementById("status");
-
-    let qi = 0;
-    let si = 0;
-
-    function setQuote(text) {
-      quoteEl.classList.add("fadeOut");
-      setTimeout(() => {
-        quoteEl.textContent = text;
-        quoteEl.classList.remove("fadeOut");
-        quoteEl.classList.add("fadeIn");
-        setTimeout(()=>quoteEl.classList.remove("fadeIn"), 450);
-      }, 450);
-    }
-
-    function setStatus(text) {
-      statusEl.classList.add("fadeOut2");
-      setTimeout(() => {
-        statusEl.childNodes[0].nodeValue = text;
-        statusEl.classList.remove("fadeOut2");
-        statusEl.classList.add("fadeIn2");
-        setTimeout(()=>statusEl.classList.remove("fadeIn2"), 350);
-      }, 350);
-    }
-
-    // старт
-    setQuote(QUOTES[0]);
-    setStatus(STATUSES[0]);
-
-    // периодичность: цитаты 20 сек, статусы 10 сек
-    setInterval(() => {
-      qi = (qi + 1) % QUOTES.length;
-      setQuote(QUOTES[qi]);
-    }, 20000);
-
-    setInterval(() => {
-      si = (si + 1) % STATUSES.length;
-      setStatus(STATUSES[si]);
-    }, 10000);
-  </script>
+showQuote();
+setInterval(showQuote, 20000); // 5 минут суммарно
+</script>
 
 </body>
 </html>
