@@ -1,82 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-
-    <!-- КРИТИЧНО для GMod -->
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-
-    <title>OldClassic | Loading</title>
-
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background: #000;
-        }
-
-        body {
-            display: table;
-            width: 100%;
-            height: 100%;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #d0d0d0;
-        }
-
-        .screen {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 52px;
-            letter-spacing: 6px;
-            color: #c8a24a;
-            margin-bottom: 15px;
-            text-shadow: 0 0 15px rgba(200,162,74,0.35);
-        }
-
-        p {
-            font-size: 18px;
-            opacity: 0.85;
-            margin-bottom: 30px;
-        }
-
-        .loader {
-            display: inline-block;
-        }
-
-        .loader span {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            margin: 0 5px;
-            background: #c8a24a;
-            border-radius: 50%;
-            animation: pulse 1.4s infinite ease-in-out both;
-        }
-
-        .loader span:nth-child(1) { animation-delay: -0.32s; }
-        .loader span:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes pulse {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loading…</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="screen">
-        <h1>OLD CLASSIC</h1>
-        <p>Подключение к тоннелям...</p>
 
-        <div class="loader">
-            <span></span><span></span><span></span>
-        </div>
-    </div>
+  <!-- Фоны/эффекты -->
+  <div class="bg">
+    <div class="vignette"></div>
+    <div class="filmgrain"></div>
+    <div class="scanlines"></div>
+    <div class="dust"></div>
+    <div class="flicker"></div>
+  </div>
+
+  <!-- Центр -->
+  <main class="wrap" aria-label="Loading screen">
+    <section class="hero">
+
+      <!-- Значок метро (SVG, не плющит) -->
+      <div class="metroMark" aria-hidden="true">
+        <svg viewBox="0 0 256 256" role="img" focusable="false" preserveAspectRatio="xMidYMid meet">
+          <!-- Красный щит -->
+          <path d="M48 48c0-8.84 7.16-16 16-16h128c8.84 0 16 7.16 16 16v92c0 30.5-18.2 58.2-46.2 70.3L128 224l-33.8-13.7C66.2 198.2 48 170.5 48 140V48z"
+                fill="#b10b0b"/>
+          <path d="M56 52c0-6.6 5.4-12 12-12h120c6.6 0 12 5.4 12 12v88c0 27.2-16.3 52-41.3 62.8L128 214.5l-30.7-11.7C72.3 192 56 167.2 56 140V52z"
+                fill="#d11212" opacity="0.95"/>
+
+          <!-- Буква М -->
+          <path d="M78 176V96c0-6 4.9-10.9 10.9-10.9h6.2c3.6 0 7 1.8 9 4.8l24 35.9 24-35.9c2-3 5.4-4.8 9-4.8h6.2c6 0 10.9 4.9 10.9 10.9v80h-20v-46.3l-20 30.1c-2 3-5.4 4.8-9 4.8s-7-1.8-9-4.8l-20-30.1V176H78z"
+                fill="#250000" opacity="0.35"/>
+          <path d="M76 176V94c0-6 4.9-10.9 10.9-10.9h6.2c3.6 0 7 1.8 9 4.8l25.7 38.5 25.7-38.5c2-3 5.4-4.8 9-4.8h6.2c6 0 10.9 4.9 10.9 10.9v82h-22v-49l-20.7 31c-2 3-5.4 4.8-9 4.8s-7-1.8-9-4.8l-20.7-31v49H76z"
+                fill="#ffeded" opacity="0.9"/>
+
+          <!-- Блик -->
+          <path d="M70 58c8-10 22-16 38-16h18c-24 4-44 18-56 36V58z" fill="#ffffff" opacity="0.10"/>
+        </svg>
+      </div>
+
+      <h1 class="title">METRO&nbsp;2033</h1>
+
+      <div class="status" id="status">
+        Подключение к тоннелям<span class="dots" aria-hidden="true"></span>
+      </div>
+
+      <!-- ОДНА цитата (меняется периодически) -->
+      <blockquote class="quote" id="quote" aria-live="polite">
+        «Внизу не ищут света — здесь учатся не выдавать его.»
+      </blockquote>
+
+      <!-- Индикатор -->
+      <div class="pips" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="brand">OLD CLASSIC</footer>
+
+  <script>
+    // 5 минут среднее подключение -> 20 сек на фразу = ~15 фраз
+    const QUOTES = [
+      "«Внизу не ищут света — здесь учатся не выдавать его.»",
+      "«Тишина — это язык метро. Громкость здесь звучит как приговор.»",
+      "«Если долго смотреть в туннель — он начнёт смотреть в ответ.»",
+      "«Мы живём не надеждой. Мы живём дисциплиной.»",
+      "«Смелость — это не шаг вперёд. Это шаг без лишнего звука.»",
+      "«В метро каждый вдох — как договор: ты берёшь воздух, а отдаёшь осторожность.»",
+      "«Страх не проходит. Он просто становится частью маршрута.»",
+      "«Главное правило выживших: не спорь с темнотой — приспосабливайся.»",
+      "«Здесь будущее не наступает. Оно ползёт по рельсам, скрипя металлом.»",
+      "«Когда гаснет свет — остаётся только порядок.»",
+      "«Внизу мы не мечтаем громко. Мечты здесь привлекают лишнее внимание.»",
+      "«Не верь эху: оно повторяет не тебя — оно проверяет тебя.»",
+      "«В метро человек узнаёт цену одной ошибки. Обычно — слишком поздно.»",
+      "«Снаружи был мир. Здесь — путь. И другого нам не оставили.»",
+      "«Если ты слышишь капли — значит, пока ещё слышишь.»"
+    ];
+
+    const STATUSES = [
+      "Подключение к тоннелям",
+      "Проверка фильтров",
+      "Синхронизация маршрутов",
+      "Загрузка снаряжения",
+      "Стабилизация связи"
+    ];
+
+    const quoteEl = document.getElementById("quote");
+    const statusEl = document.getElementById("status");
+
+    let qi = 0;
+    let si = 0;
+
+    function setQuote(text) {
+      quoteEl.classList.add("fadeOut");
+      setTimeout(() => {
+        quoteEl.textContent = text;
+        quoteEl.classList.remove("fadeOut");
+        quoteEl.classList.add("fadeIn");
+        setTimeout(()=>quoteEl.classList.remove("fadeIn"), 450);
+      }, 450);
+    }
+
+    function setStatus(text) {
+      statusEl.classList.add("fadeOut2");
+      setTimeout(() => {
+        statusEl.childNodes[0].nodeValue = text;
+        statusEl.classList.remove("fadeOut2");
+        statusEl.classList.add("fadeIn2");
+        setTimeout(()=>statusEl.classList.remove("fadeIn2"), 350);
+      }, 350);
+    }
+
+    // старт
+    setQuote(QUOTES[0]);
+    setStatus(STATUSES[0]);
+
+    // периодичность: цитаты 20 сек, статусы 10 сек
+    setInterval(() => {
+      qi = (qi + 1) % QUOTES.length;
+      setQuote(QUOTES[qi]);
+    }, 20000);
+
+    setInterval(() => {
+      si = (si + 1) % STATUSES.length;
+      setStatus(STATUSES[si]);
+    }, 10000);
+  </script>
+
 </body>
 </html>
