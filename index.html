@@ -1,244 +1,822 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>METRO 2033</title>
+    <meta charset="UTF-8">
+    <title>ЗАГРУЗКА</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 
-<style>
-/* ================= BASE ================= */
-html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    background: #020202;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
-    color: #cfcfcf;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIyIiBmaWxsPSIjNjY2Ii8+PC9zdmc+'), auto;
+        }
 
-/* ================= GMOD SAFE CENTER ================= */
-.screen {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-}
-.cell {
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    text-align: center;
-}
+        body {
+            background: #000;
+            color: #300;
+            font-family: 'PT Mono', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            line-height: 1.2;
+        }
 
-/* ================= DARK BACKGROUND ================= */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(
-            circle at center,
-            rgba(0,0,0,0.15) 0%,
-            rgba(0,0,0,0.55) 45%,
-            rgba(0,0,0,0.93) 100%
-        );
-    pointer-events: none;
-}
+        /* Фон - абсолютная чернота */
+        .blackness {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: -3;
+        }
 
-/* грязь + пыль */
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0.03),
-            rgba(255,255,255,0.03) 1px,
-            transparent 1px,
-            transparent 3px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0,0,0,0.35),
-            rgba(0,0,0,0.35) 2px,
-            transparent 2px,
-            transparent 18px
-        );
-    opacity: 0.45;
-    pointer-events: none;
-}
+        /* Едва заметные тени и силуэты */
+        .silhouettes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(40, 0, 0, 0.1) 0%, transparent 70%),
+                radial-gradient(circle at 80% 70%, rgba(30, 0, 0, 0.05) 0%, transparent 70%),
+                linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(20,0,0,0.3) 50%, rgba(0,0,0,1) 100%);
+            z-index: -2;
+            opacity: 0.3;
+        }
 
-/* ================= CONTENT ================= */
-.hero {
-    max-width: 920px;
-    margin: 0 auto;
-    padding-bottom: 140px;
-}
+        /* Дым и пар */
+        .smoke {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(50, 0, 0, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(40, 0, 0, 0.01) 0%, transparent 50%);
+            animation: smokeDrift 40s infinite linear;
+            z-index: -1;
+            opacity: 0.4;
+        }
 
-/* ================= TITLE ================= */
-.title {
-    font-size: 92px;
-    letter-spacing: 12px;
-    margin: 0 0 30px;
-    text-transform: uppercase;
-    line-height: 1;
+        @keyframes smokeDrift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(100px, 50px) rotate(1deg); }
+        }
 
-    /* ГРЯЗНО-БЕЛАЯ КРАСКА (НЕ МЕТАЛЛ) */
-    background:
-        linear-gradient(
-            180deg,
-            #f1f1f1 0%,
-            #d6d6d6 40%,
-            #9b9b9b 100%
-        ),
-        repeating-linear-gradient(
-            -15deg,
-            rgba(0,0,0,0.45),
-            rgba(0,0,0,0.45) 2px,
-            rgba(255,255,255,0.12) 4px,
-            rgba(255,255,255,0.12) 6px
-        );
+        /* Капли воды/конденсата */
+        .drops {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+        .drop {
+            position: absolute;
+            background: rgba(80, 0, 0, 0.1);
+            border-radius: 50%;
+            animation: dropFall linear infinite;
+        }
 
-    /* МАТОВАЯ ТЬМА */
-    text-shadow:
-        0 1px 0 rgba(0,0,0,0.9),
-        0 8px 22px rgba(0,0,0,0.95);
+        @keyframes dropFall {
+            0% {
+                top: -10px;
+                opacity: 0;
+                transform: scale(0.1);
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+                transform: scale(1);
+            }
+        }
 
-    animation: fadeIn 4s ease forwards;
-}
+        /* Основной контейнер - как будто видим через запотевший противогаз */
+        .container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.7);
+            border-left: 1px solid rgba(60, 0, 0, 0.3);
+            border-right: 1px solid rgba(60, 0, 0, 0.3);
+            box-shadow: 
+                inset 0 0 200px rgba(0, 0, 0, 0.9),
+                inset 0 0 100px rgba(40, 0, 0, 0.5);
+            filter: blur(0.3px);
+        }
 
-/* 2033 — СТАРАЯ РЖАВЧИНА */
-.title span {
-    margin-left: 22px;
+        /* Логотип - едва видимый, как кровавый след */
+        .logo {
+            font-size: 5rem;
+            color: rgba(60, 0, 0, 0.3);
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            font-weight: 900;
+            text-shadow: 
+                0 0 1px rgba(100, 0, 0, 0.5),
+                0 0 3px rgba(80, 0, 0, 0.2);
+            position: relative;
+            opacity: 0.5;
+        }
 
-    background:
-        linear-gradient(
-            180deg,
-            #c96a2a 0%,
-            #8b3f16 45%,
-            #4a1c0a 100%
-        ),
-        repeating-linear-gradient(
-            -12deg,
-            rgba(0,0,0,0.55),
-            rgba(0,0,0,0.55) 2px,
-            rgba(255,255,255,0.08) 4px,
-            rgba(255,255,255,0.08) 6px
-        );
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(80, 0, 0, 0.2) 20%, 
+                rgba(80, 0, 0, 0.1) 50%,
+                rgba(80, 0, 0, 0.2) 80%, 
+                transparent 100%);
+        }
 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        /* Подзаголовок - шепот в темноте */
+        .subtitle {
+            font-size: 1rem;
+            color: rgba(70, 0, 0, 0.4);
+            text-align: center;
+            margin-bottom: 60px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
 
-/* ================= QUOTE ================= */
-.quote {
-    font-size: 19px;
-    line-height: 1.6;
-    max-width: 760px;
-    margin: 0 auto 26px;
-    color: rgba(190,190,190,0.65);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+        /* Панель загрузки - как разбитый дисплей */
+        .loading-area {
+            background: rgba(10, 0, 0, 0.8);
+            border: 1px solid rgba(50, 0, 0, 0.2);
+            padding: 25px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.8),
+                0 0 20px rgba(0, 0, 0, 0.5);
+        }
 
-    opacity: 0;
-    transition: opacity 1.6s ease;
-}
-.quote.show {
-    opacity: 1;
-}
+        /* Треснувшее стекло эффект */
+        .loading-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(45deg, transparent 49%, rgba(80, 0, 0, 0.05) 50%, transparent 51%),
+                linear-gradient(-45deg, transparent 49%, rgba(80, 0, 0, 0.05) 50%, transparent 51%);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-/* ================= DOTS ================= */
-.dots span {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 6px;
-    background: rgba(140,70,35,0.35);
-    border-radius: 50%;
-    animation: dot 1.8s infinite;
-}
-.dots span:nth-child(2){ animation-delay:.4s }
-.dots span:nth-child(3){ animation-delay:.8s }
+        /* Текст загрузки - мерцающий, нечеткий */
+        .loading-text {
+            font-size: 1.2rem;
+            color: rgba(100, 0, 0, 0.7);
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 0 2px rgba(255, 0, 0, 0.3);
+            animation: textFlicker 5s infinite;
+            position: relative;
+            z-index: 2;
+        }
 
-@keyframes dot {
-    0%,100%{ opacity:.2 }
-    50%{ opacity:.85 }
-}
+        @keyframes textFlicker {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 0.3; }
+            75% { opacity: 0.9; }
+        }
 
-/* ================= FOOTER ================= */
-.footer {
-    position: fixed;
-    bottom: 18px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 5px;
-    color: rgba(255,255,255,0.22);
-}
+        /* Прогресс-бар - как капающая кровь */
+        .progress-wrapper {
+            background: rgba(20, 0, 0, 0.6);
+            border: 1px solid rgba(50, 0, 0, 0.3);
+            height: 3px;
+            position: relative;
+            margin: 30px 0;
+            overflow: hidden;
+            box-shadow: 
+                inset 0 0 10px rgba(0, 0, 0, 0.8),
+                0 0 5px rgba(0, 0, 0, 0.5);
+        }
 
-/* ================= ANIMS ================= */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-</style>
+        .progress-blood {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(60, 0, 0, 0) 0%, 
+                rgba(100, 0, 0, 0.8) 50%, 
+                rgba(60, 0, 0, 0) 100%);
+            position: relative;
+            transition: width 1s ease-out;
+            box-shadow: 0 0 10px rgba(100, 0, 0, 0.5);
+        }
+
+        /* Эффект капель на прогрессе */
+        .progress-blood::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -2px;
+            width: 3px;
+            height: 7px;
+            background: rgba(120, 0, 0, 0.9);
+            animation: bloodDrip 2s infinite;
+            box-shadow: 0 0 5px rgba(120, 0, 0, 0.7);
+        }
+
+        @keyframes bloodDrip {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(5px); opacity: 1; }
+        }
+
+        .progress-percent {
+            position: absolute;
+            right: 10px;
+            top: -25px;
+            color: rgba(100, 0, 0, 0.6);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+            letter-spacing: 1px;
+        }
+
+        /* Журнал сообщений - как бортовой журнал умирающей станции */
+        .log {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(15, 0, 0, 0.6);
+            border-top: 1px solid rgba(40, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(40, 0, 0, 0.2);
+            min-height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .log::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 1px,
+                rgba(30, 0, 0, 0.05) 1px,
+                rgba(30, 0, 0, 0.05) 2px
+            );
+            pointer-events: none;
+        }
+
+        .log-title {
+            color: rgba(80, 0, 0, 0.5);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 1px solid rgba(40, 0, 0, 0.2);
+            padding-bottom: 5px;
+            opacity: 0.7;
+        }
+
+        .log-content {
+            color: rgba(90, 0, 0, 0.6);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+            opacity: 0.8;
+        }
+
+        /* Статус бар - почти невидимый */
+        .status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(30, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(30, 0, 0, 0.1);
+            opacity: 0.6;
+        }
+
+        .status-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .status-item::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 1px;
+            background: rgba(40, 0, 0, 0.1);
+        }
+
+        .status-item:last-child::after {
+            display: none;
+        }
+
+        .status-label {
+            color: rgba(60, 0, 0, 0.4);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 3px;
+        }
+
+        .status-value {
+            color: rgba(80, 0, 0, 0.7);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Предупреждения */
+        .warnings {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgba(80, 0, 0, 0.3);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            animation: warningPulse 10s infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Абсолютная чернота по краям */
+        .black-edges {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                transparent 40%,
+                rgba(0, 0, 0, 0.9) 70%,
+                rgba(0, 0, 0, 1) 100%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Случайные вспышки (далекие взрывы?) */
+        .flashes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .flash {
+            position: absolute;
+            background: rgba(100, 0, 0, 0.1);
+            border-radius: 50%;
+            opacity: 0;
+            animation: flashAppear 8s infinite;
+        }
+
+        @keyframes flashAppear {
+            0%, 95% { opacity: 0; transform: scale(0.1); }
+            5%, 10% { opacity: 0.1; transform: scale(1); }
+        }
+
+        /* Эхо/реверберация текста */
+        .echo {
+            position: absolute;
+            color: rgba(40, 0, 0, 0.1);
+            z-index: -1;
+            transform: translate(2px, 2px);
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Абсолютная темнота -->
+    <div class="blackness"></div>
+    <div class="silhouettes"></div>
+    <div class="smoke"></div>
+    <div class="black-edges"></div>
+    
+    <!-- Капли -->
+    <div class="drops" id="drops"></div>
+    
+    <!-- Вспышки -->
+    <div class="flashes" id="flashes"></div>
 
-<table class="screen">
-<tr>
-<td class="cell">
+    <!-- Основной контент -->
+    <div class="container">
+        <div class="logo">МЕТРО</div>
+        <div class="subtitle">ТОННЕЛЬ 43 • УРОВЕНЬ -7 • ДОСТУП ОГРАНИЧЕН</div>
+        
+        <div class="loading-area">
+            <div class="loading-text" id="loadingText">...ЗАГРУЗКА СИСТЕМ КОНТРОЛЯ...</div>
+            
+            <div class="progress-wrapper">
+                <div class="progress-blood" id="progressBlood"></div>
+                <div class="progress-percent" id="progressPercent">0%</div>
+            </div>
+            
+            <div class="log">
+                <div class="log-title">СИСТЕМНЫЙ ЖУРНАЛ [УРОВЕНЬ ДОСТУПА: КРАСНЫЙ]</div>
+                <div class="log-content" id="logContent">
+                    > Последнее обновление: 72 часа назад<br>
+                    > Статус: КРИТИЧЕСКИЙ<br>
+                    > Контакт с ЦЕНТРАЛЬНОЙ: ОТСУТСТВУЕТ<br>
+                    > Атмосфера: ТОКСИЧНА<br>
+                    > Рекомендация: НЕ ПРОДОЛЖАТЬ
+                </div>
+            </div>
+        </div>
 
-<div class="hero">
+        <div class="status">
+            <div class="status-item">
+                <div class="status-label">ДОЗИМЕТР</div>
+                <div class="status-value" id="dosimeter">--.- Р/ч</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">КИСЛОРОД</div>
+                <div class="status-value" id="oxygen">-%</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">ДАВЛЕНИЕ</div>
+                <div class="status-value" id="pressure">--- мм</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">БИОМАССА</div>
+                <div class="status-value" id="biomass">ОБНАР.</div>
+            </div>
+        </div>
 
-<div class="title">
-    METRO <span>2033</span>
-</div>
+        <div class="warnings" id="warnings">
+            ВНИМАНИЕ: ЗОНА ВЫСОКОГО РИСКА • НЕ СНИМАТЬ ПРОТИВОГАЗ
+        </div>
+    </div>
 
-<div class="quote" id="quote"></div>
+    <script>
+        // Создаем капли
+        const dropsContainer = document.getElementById('drops');
+        for (let i = 0; i < 25; i++) {
+            const drop = document.createElement('div');
+            drop.className = 'drop';
+            drop.style.left = Math.random() * 100 + '%';
+            drop.style.width = Math.random() * 3 + 1 + 'px';
+            drop.style.height = Math.random() * 10 + 5 + 'px';
+            drop.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            drop.style.animationDelay = Math.random() * 20 + 's';
+            dropsContainer.appendChild(drop);
+        }
 
-<div class="dots">
-    <span></span><span></span><span></span>
-</div>
+        // Создаем случайные вспышки
+        const flashesContainer = document.getElementById('flashes');
+        for (let i = 0; i < 5; i++) {
+            const flash = document.createElement('div');
+            flash.className = 'flash';
+            flash.style.left = Math.random() * 100 + '%';
+            flash.style.top = Math.random() * 100 + '%';
+            flash.style.width = Math.random() * 300 + 100 + 'px';
+            flash.style.height = flash.style.width;
+            flash.style.animationDelay = Math.random() * 15 + 's';
+            flashesContainer.appendChild(flash);
+        }
 
-</div>
+        // Элементы
+        const progressBlood = document.getElementById('progressBlood');
+        const progressPercent = document.getElementById('progressPercent');
+        const loadingText = document.getElementById('loadingText');
+        const logContent = document.getElementById('logContent');
+        const warnings = document.getElementById('warnings');
 
-</td>
-</tr>
-</table>
+        // Системные сообщения - мрачные, безысходные
+        const systemLogs = [
+            "> Последняя передача: 'ОНИ В ТУННЕЛЯХ...'",
+            "> Сигнал тревоги: СТАНЦИЯ 7 МОЛЧИТ",
+            "> Биодатчики: МНОЖЕСТВЕННЫЕ КОНТАКТЫ",
+            "> Воздух: КОНЦЕНТРАЦИЯ МЕТАНА 4.2%",
+            "> Температура: ПАДАЕТ (-3°C И ВЫШЕ)",
+            "> Освещение: АВАРИЙНЫЙ РЕЖИМ",
+            "> Связь: ТОЛЬКО ФОНОВЫЙ ШУМ",
+            "> Давление: НЕСТАБИЛЬНОЕ",
+            "> Рекомендация: ОЖИДАТЬ...",
+            "> Время до эвакуации: НЕИЗВЕСТНО",
+            "> Состояние тоннелей: АВАРИЙНОЕ",
+            "> Сигналы НОС: ПРИБЛИЖАЮТСЯ",
+            "> Записи: 'МЫ НЕ ВЫБЕРЕМСЯ...'",
+            "> Статус миссии: ПОТЕРЯН",
+            "> Надежда: НУЛЕВАЯ"
+        ];
 
-<div class="footer">OLD&nbsp;CLASSIC</div>
+        const loadingStates = [
+            "...ПРОВЕРКА ДАТЧИКОВ СМЕРТИ...",
+            "ЗАГРУЗКА КАРТЫ КАТАКОМБ...",
+            "СИНХРОНИЗАЦИЯ С ТЕМНОТОЙ...",
+            "СКАНИРОВАНИЕ ПУСТОТЫ...",
+            "ПОИСК СИГНАЛОВ ЖИЗНИ...",
+            "АНАЛИЗ РАДИАЦИОННЫХ СЛЕДОВ...",
+            "ПОДКЛЮЧЕНИЕ К АГОНИИ...",
+            "ЧТЕНИЕ ПОСЛЕДНИХ ЗАПИСЕЙ...",
+            "ОЖИДАНИЕ КОНЦА...",
+            "ПРИГОТОВЬТЕСЬ К ТЬМЕ..."
+        ];
 
-<script>
-const quotes = [
- "«Внизу мы не ищем света — здесь учатся не выдавать его.»",
- "«Тишина опаснее выстрела.»",
- "«Метро не про спасение. Оно про выживание.»",
- "«Каждый шаг слышит тьма.»",
- "«Здесь нет героев.»",
- "«Надежда — это шум.»",
- "«Назад дороги нет.»"
-];
+        const warningMessages = [
+            "ВНИМАНИЕ: ЗОНА ВЫСОКОГО РИСКА • НЕ СНИМАТЬ ПРОТИВОГАЗ",
+            "ПРЕДУПРЕЖДЕНИЕ: БИОЛОГИЧЕСКАЯ УГРОЗА ОБНАРУЖЕНА",
+            "ОПАСНОСТЬ: РАДИАЦИЯ ПРЕВЫШАЕТ КРИТИЧЕСКИЙ УРОВЕНЬ",
+            "ТРЕВОГА: СИСТЕМЫ ЖИЗНЕОБЕСПЕЧЕНИЯ ОТКАЗЫВАЮТ",
+            "ПОСЛЕДНЕЕ ПРЕДУПРЕЖДЕНИЕ: ВОЗВРАТ НЕВОЗМОЖЕН"
+        ];
 
-const q = document.getElementById("quote");
-let i = 0;
+        // Параметры
+        let progress = 0;
+        let currentState = 0;
+        let lastLogTime = 0;
+        let darknessLevel = 0.7;
 
-function nextQuote(){
-    q.classList.remove("show");
-    setTimeout(()=>{
-        q.textContent = quotes[i];
-        q.classList.add("show");
-        i = (i + 1) % quotes.length;
-    }, 900);
-}
+        // Медленная, мучительная загрузка
+        function updateLoading() {
+            if (progress < 100) {
+                // Очень медленный прогресс с частыми остановками
+                let increment = 0;
+                
+                if (Math.random() < 0.3) {
+                    // Зависание
+                    increment = 0;
+                    loadingText.style.animation = 'none';
+                    loadingText.style.opacity = '0.3';
+                    setTimeout(() => {
+                        loadingText.style.animation = '';
+                        loadingText.style.opacity = '0.7';
+                    }, 1000);
+                } else {
+                    increment = 0.05 + Math.random() * 0.1;
+                }
+                
+                // Иногда откат назад
+                if (Math.random() < 0.05 && progress > 10) {
+                    progress -= 2;
+                    addLog("> СИСТЕМНЫЙ СБОЙ: ОТКАТ ПРОГРЕССА");
+                }
+                
+                progress += increment;
+                
+                // Смена состояния загрузки
+                if (Math.floor(progress / 15) > currentState) {
+                    currentState = Math.floor(progress / 15);
+                    if (currentState < loadingStates.length) {
+                        loadingText.textContent = loadingStates[currentState];
+                        
+                        // Случайное эхо
+                        createEcho(loadingText.textContent);
+                    }
+                }
+                
+                // Добавление случайных логов
+                if (Date.now() - lastLogTime > 3000 && Math.random() < 0.4) {
+                    addLog(systemLogs[Math.floor(Math.random() * systemLogs.length)]);
+                    lastLogTime = Date.now();
+                }
+                
+                // Случайные изменения затемнения
+                if (Math.random() < 0.1) {
+                    darknessLevel = 0.5 + Math.random() * 0.4;
+                    document.querySelector('.container').style.opacity = darknessLevel;
+                }
+                
+                // Случайные вспышки предупреждений
+                if (Math.random() < 0.05) {
+                    warnings.style.animation = 'warningPulse 1s 3';
+                    warnings.textContent = warningMessages[Math.floor(Math.random() * warningMessages.length)];
+                }
+                
+                // Критические значения (33%, 66%, 90%)
+                if (Math.abs(progress - 33) < 0.5) {
+                    addLog("> КРИТИЧЕСКИЙ ПОРОГ 1: ТОННЕЛЬ ЗАПЕЧАТАН");
+                    simulateDistress();
+                }
+                if (Math.abs(progress - 66) < 0.5) {
+                    addLog("> КРИТИЧЕСКИЙ ПОРОГ 2: ВОЗДУХ КОНЧАЕТСЯ");
+                    simulateDistress();
+                }
+                if (Math.abs(progress - 90) < 0.5) {
+                    addLog("> КРИТИЧЕСКИЙ ПОРОГ 3: ПОСЛЕДНИЙ РУБЕЖ");
+                    simulateDistress();
+                }
+            } else {
+                progress = 100;
+                loadingText.textContent = "...СИСТЕМА УМИРАЕТ...";
+                addLog("> ЗАГРУЗКА ЗАВЕРШЕНА");
+                addLog("> ДОБРО ПОЖАЛОВАТЬ В АД");
+                warnings.textContent = "ПОДГОТОВЬТЕСЬ К ТОМУ, ЧТО УВИДИТЕ";
+                
+                // Сигнал для GMod
+                if (typeof window.loadComplete === 'function') {
+                    setTimeout(() => window.loadComplete(), 3000);
+                }
+            }
+            
+            // Обновление прогресса
+            progressBlood.style.width = progress + '%';
+            progressPercent.textContent = Math.floor(progress) + '%';
+            
+            // Обновление статусов
+            updateStatus();
+            
+            requestAnimationFrame(updateLoading);
+        }
 
-nextQuote();
-setInterval(nextQuote, 22000); // медленно, давяще
-</script>
+        // Добавление лога
+        function addLog(message) {
+            const lines = logContent.innerHTML.split('<br>');
+            if (lines.length > 8) {
+                lines.shift();
+            }
+            lines.push(message);
+            logContent.innerHTML = lines.join('<br>');
+            
+            // Случайный глитч текста
+            if (Math.random() < 0.3) {
+                glitchText(logContent);
+            }
+        }
 
+        // Обновление статусов
+        function updateStatus() {
+            // Дозиметр - растет непредсказуемо
+            let rad = parseFloat(document.getElementById('dosimeter').textContent) || 0;
+            if (Math.random() < 0.2) {
+                rad += Math.random() * 0.5 - 0.1;
+                if (rad < 0.1) rad = 0.1;
+                if (rad > 15) rad = 15;
+            }
+            document.getElementById('dosimeter').textContent = rad.toFixed(1) + ' Р/ч';
+            
+            // Кислород - медленно падает
+            let oxy = parseFloat(document.getElementById('oxygen').textContent) || 100;
+            if (Math.random() < 0.3) {
+                oxy -= Math.random() * 0.5;
+                if (oxy < 15) oxy = 15;
+            }
+            document.getElementById('oxygen').textContent = Math.floor(oxy) + '%';
+            
+            // Давление - нестабильное
+            let press = parseInt(document.getElementById('pressure').textContent) || 752;
+            if (Math.random() < 0.4) {
+                press += Math.floor(Math.random() * 10 - 5);
+                if (press < 700) press = 700;
+                if (press > 800) press = 800;
+            }
+            document.getElementById('pressure').textContent = press + ' мм';
+            
+            // Цвета по критичности
+            if (rad > 10) document.getElementById('dosimeter').style.color = 'rgba(150, 0, 0, 0.9)';
+            if (oxy < 30) document.getElementById('oxygen').style.color = 'rgba(150, 0, 0, 0.9)';
+            if (press < 720 || press > 780) document.getElementById('pressure').style.color = 'rgba(150, 0, 0, 0.9)';
+        }
+
+        // Симуляция бедствия
+        function simulateDistress() {
+            // Встряска экрана
+            document.querySelector('.container').style.transform = 'translate(' + 
+                (Math.random() * 4 - 2) + 'px, ' + 
+                (Math.random() * 4 - 2) + 'px)';
+            setTimeout(() => {
+                document.querySelector('.container').style.transform = 'translate(0, 0)';
+            }, 200);
+            
+            // Вспышка
+            const flash = document.createElement('div');
+            flash.style.position = 'fixed';
+            flash.style.top = '0';
+            flash.style.left = '0';
+            flash.style.width = '100%';
+            flash.style.height = '100%';
+            flash.style.background = 'rgba(100, 0, 0, 0.2)';
+            flash.style.pointerEvents = 'none';
+            flash.style.zIndex = '5';
+            flash.style.animation = 'flashAppear 0.5s';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+            
+            // Звуковой эффект (в теории)
+            if (typeof window.playSound === 'function') {
+                window.playSound('distress');
+            }
+        }
+
+        // Эффект глитча текста
+        function glitchText(element) {
+            const original = element.textContent;
+            let glitched = '';
+            for (let i = 0; i < original.length; i++) {
+                if (Math.random() < 0.1) {
+                    glitched += String.fromCharCode(original.charCodeAt(i) + Math.floor(Math.random() * 10 - 5));
+                } else if (Math.random() < 0.05) {
+                    glitched += '�';
+                } else {
+                    glitched += original[i];
+                }
+            }
+            element.textContent = glitched;
+            setTimeout(() => {
+                element.textContent = original;
+            }, 100);
+        }
+
+        // Создание эхо-эффекта
+        function createEcho(text) {
+            const echo = document.createElement('div');
+            echo.className = 'echo';
+            echo.textContent = text;
+            echo.style.left = (Math.random() * 20 - 10) + 'px';
+            echo.style.top = (Math.random() * 20 - 10) + 'px';
+            document.querySelector('.loading-area').appendChild(echo);
+            setTimeout(() => echo.remove(), 2000);
+        }
+
+        // Случайные изменения предупреждений
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                warnings.textContent = warningMessages[Math.floor(Math.random() * warningMessages.length)];
+                warnings.style.animation = 'warningPulse 2s';
+            }
+        }, 5000);
+
+        // Случайные затемнения
+        setInterval(() => {
+            if (Math.random() < 0.2 && progress < 100) {
+                const container = document.querySelector('.container');
+                container.style.opacity = 0.3 + Math.random() * 0.4;
+                setTimeout(() => {
+                    container.style.opacity = darknessLevel;
+                }, 500);
+            }
+        }, 8000);
+
+        // Запуск
+        updateLoading();
+
+        // API для GMod
+        window.setProgress = function(p) {
+            progress = p;
+        };
+
+        window.addLogMessage = function(msg) {
+            addLog("> " + msg);
+        };
+
+        window.setWarning = function(warning) {
+            warnings.textContent = warning;
+            warnings.style.animation = 'warningPulse 2s 3';
+        };
+
+        window.simulateEmergency = function() {
+            simulateDistress();
+        };
+    </script>
 </body>
 </html>
