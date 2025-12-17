@@ -1,227 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-<title>METRO</title>
-
-<style>
-/* ================= BASE ================= */
-html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background: #050505;
-    font-family: Arial, Helvetica, sans-serif;
-    overflow: hidden;
-}
-
-/* ================= GMOD SAFE CENTER ================= */
-.screen {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-}
-.cell {
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    text-align: center;
-}
-
-/* ================= CONTENT ================= */
-.hero {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding-bottom: 120px;
-}
-
-/* ================= METRO SYMBOL ================= */
-.metroMark {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 18px;
-    animation: pulse 4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%,100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
-    50% { transform: scale(1.04); filter: drop-shadow(0 0 18px rgba(180,20,20,0.6)); }
-}
-
-/* ================= PAINT TEXT ================= */
-.title {
-    font-size: 72px;
-    letter-spacing: 14px;
-    margin: 0 0 28px;
-    text-transform: uppercase;
-
-    color: #d38b2d;
-
-    /* эффект краски */
-    background:
-        repeating-linear-gradient(
-            -12deg,
-            rgba(255,255,255,0.12),
-            rgba(255,255,255,0.12) 2px,
-            rgba(0,0,0,0.25) 4px,
-            rgba(0,0,0,0.25) 6px
-        ),
-        linear-gradient(
-            180deg,
-            #f3c57a 0%,
-            #d38b2d 40%,
-            #9b5b1c 100%
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    text-shadow:
-        0 2px 0 rgba(0,0,0,0.6),
-        0 18px 35px rgba(0,0,0,0.85);
-}
-
-/* ================= QUOTE ================= */
-.quote {
-    font-size: 22px;
-    line-height: 1.6;
-    color: rgba(220,220,220,0.85);
-    max-width: 900px;
-    margin: 0 auto 22px;
-
-    opacity: 0;
-    transition: opacity 1s ease;
-}
-.quote.show { opacity: 1; }
-
-/* ================= DOTS ================= */
-.pips span {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    margin: 0 6px;
-    background: rgba(211,139,45,0.5);
-    border-radius: 50%;
-    animation: pip 1.6s infinite;
-}
-.pips span:nth-child(2){ animation-delay:.3s; }
-.pips span:nth-child(3){ animation-delay:.6s; }
-
-@keyframes pip {
-    0%,100% { opacity: .25; }
-    50% { opacity: .9; }
-}
-
-/* ================= FOOTER ================= */
-.footer {
-    position: absolute;
-    bottom: 18px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: rgba(255,255,255,0.25);
-    text-transform: uppercase;
-}
-
-/* ================= BACKGROUND ================= */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        repeating-linear-gradient(
-            135deg,
-            rgba(255,255,255,0.025),
-            rgba(255,255,255,0.025) 2px,
-            transparent 2px,
-            transparent 18px
-        );
-    opacity: 0.18;
-    pointer-events: none;
-}
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0.015),
-            rgba(255,255,255,0.015) 1px,
-            transparent 1px,
-            transparent 2px
-        );
-    pointer-events: none;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>METRO 2033 — Загрузка</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<table class="screen">
-<tr>
-<td class="cell">
+<div class="overlay"></div>
 
-<div class="hero">
+<div class="screen-container">
+    <!-- Символ метро -->
+    <img src="mll-logo.jpg" alt="Метро" class="metro-symbol">
 
-    <!-- RED METRO SYMBOL -->
-    <div class="metroMark">
-        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-            <path d="M48 48h160v96c0 32-20 60-50 70l-30 12-30-12c-30-10-50-38-50-70V48z" fill="#c01414"/>
-            <path d="M80 176V96h24l24 36 24-36h24v80h-24v-44l-24 36-24-36v44H80z"
-                  fill="#fff0f0"/>
-        </svg>
-    </div>
+    <!-- Основной текст -->
+    <h1 class="main-title">METRO 2033</h1>
 
-    <div class="title">METRO&nbsp;2033</div>
+    <!-- Цитата -->
+    <p class="quote-text" id="quote"></p>
 
-    <div class="quote" id="quote"></div>
+    <!-- Навигация точек -->
+    <div id="dots"></div>
 
-    <div class="pips">
-        <span></span><span></span><span></span>
-    </div>
-
+    <!-- Footer -->
+    <div class="footer-text">OLD CLASSIC</div>
 </div>
 
-</td>
-</tr>
-</table>
-
-<div class="footer">OLD&nbsp;CLASSIC</div>
+<!-- Музыка / YouTube -->
+<div class="music-player">
+    <iframe width="0" height="0"
+        src="https://www.youtube.com/embed/BgBNLX_3afs?autoplay=0&loop=1&playlist=BgBNLX_3afs"
+        frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>
+    </iframe>
+</div>
 
 <script>
-const quotes = [
-  "«Внизу не ищут света — здесь учатся не выдавать его.»",
-  "«Тишина в тоннелях опаснее выстрела.»",
-  "«Метро — это не убежище. Это испытание.»",
-  "«Страх здесь не враг. Он инструмент.»",
-  "«Каждый шаг имеет цену.»",
-  "«Тьма не нападает. Она ждёт.»",
-  "«Выживание — это порядок.»",
-  "«Здесь будущее не обещают.»",
-  "«Надежда — роскошь.»",
-  "«Шагай тихо.»",
-  "«Выход не гарантирован.»"
-];
+    const quotes = [
+        "«Внизу мы не ищем света — здесь учатся не выдавать его.»",
+        "«Тишина — хуже сирены.»",
+        "«Мы выжили не потому, что были сильнее, а потому, что привыкли бояться.»",
+        "«Тот, кто ищет спасения наверху, уже мёртв.»",
+        "«Всё, что осталось от человечества — в туннелях.»"
+    ];
 
-const q = document.getElementById("quote");
-let i = 0;
+    let idx = 0;
+    const quoteText = document.getElementById("quote");
+    const dots = document.getElementById("dots");
 
-function nextQuote() {
-    q.classList.remove("show");
-    setTimeout(() => {
-        q.textContent = quotes[i];
-        q.classList.add("show");
-        i = (i + 1) % quotes.length;
-    }, 600);
-}
+    function showQuote(i) {
+        quoteText.style.opacity = "0";
+        setTimeout(() => {
+            quoteText.textContent = quotes[i];
+            quoteText.style.opacity = "1";
+        }, 400);
+    }
 
-nextQuote();
-setInterval(nextQuote, 20000);
+    function refreshDots(i) {
+        dots.innerHTML = "";
+        for (let j = 0; j < quotes.length; j++) {
+            const d = document.createElement("span");
+            d.className = "dot " + (j === i ? "active" : "");
+            dots.appendChild(d);
+        }
+    }
+
+    function nextQuote() {
+        idx = (idx + 1) % quotes.length;
+        showQuote(idx);
+        refreshDots(idx);
+    }
+
+    // Инициализация
+    showQuote(idx);
+    refreshDots(idx);
+    setInterval(nextQuote, 7000);  // изменение каждые 7 сек
 </script>
 
 </body>
