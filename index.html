@@ -2,13 +2,75 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>OldClassic | Loading</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
-<div class="overlay">
-    <div class="content">
+    <!-- КРИТИЧНО для GMod -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+
+    <title>OldClassic | Loading</title>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: #000;
+        }
+
+        body {
+            display: table;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #d0d0d0;
+        }
+
+        .screen {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 52px;
+            letter-spacing: 6px;
+            color: #c8a24a;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(200,162,74,0.35);
+        }
+
+        p {
+            font-size: 18px;
+            opacity: 0.85;
+            margin-bottom: 30px;
+        }
+
+        .loader {
+            display: inline-block;
+        }
+
+        .loader span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background: #c8a24a;
+            border-radius: 50%;
+            animation: pulse 1.4s infinite ease-in-out both;
+        }
+
+        .loader span:nth-child(1) { animation-delay: -0.32s; }
+        .loader span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes pulse {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="screen">
         <h1>OLD CLASSIC</h1>
         <p>Подключение к тоннелям...</p>
 
@@ -16,11 +78,5 @@
             <span></span><span></span><span></span>
         </div>
     </div>
-</div>
-
-<audio autoplay loop>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
-
 </body>
 </html>
