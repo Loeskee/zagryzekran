@@ -13,10 +13,9 @@ html, body {
     background: #020202;
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
-    color: #cfcfcf;
 }
 
-/* ================= GMOD SAFE CENTER ================= */
+/* ================= SAFE CENTER (GMOD) ================= */
 .screen {
     width: 100%;
     height: 100%;
@@ -35,10 +34,12 @@ body::before {
     position: fixed;
     inset: 0;
     background:
-        radial-gradient(circle at center,
-            rgba(0,0,0,0.2) 0%,
-            rgba(0,0,0,0.65) 55%,
-            rgba(0,0,0,0.95) 100%);
+        radial-gradient(
+            circle at center,
+            rgba(0,0,0,0.15) 0%,
+            rgba(0,0,0,0.55) 45%,
+            rgba(0,0,0,0.92) 100%
+        );
     pointer-events: none;
 }
 
@@ -49,12 +50,12 @@ body::after {
     background:
         repeating-linear-gradient(
             135deg,
-            rgba(255,255,255,0.015),
-            rgba(255,255,255,0.015) 2px,
+            rgba(255,255,255,0.018),
+            rgba(255,255,255,0.018) 2px,
             transparent 2px,
-            transparent 20px
+            transparent 22px
         );
-    opacity: 0.25;
+    opacity: 0.35;
     pointer-events: none;
 }
 
@@ -65,58 +66,78 @@ body::after {
     padding-bottom: 140px;
 }
 
-/* ================= METRO SYMBOL ================= */
-.metro {
-    margin: 0 auto 16px;
-    width: 64px;
-    animation: metroPulse 5s ease-in-out infinite;
-    filter: drop-shadow(0 0 20px rgba(140,10,10,0.7));
-}
-
-@keyframes metroPulse {
-    0%,100% { transform: scale(1); opacity: .75; }
-    50% { transform: scale(1.05); opacity: 1; }
-}
-
 /* ================= TITLE ================= */
 .title {
-    font-size: 70px;
-    letter-spacing: 12px;
-    margin: 0 0 26px;
+    font-size: 88px;
+    letter-spacing: 10px;
+    margin: 0 0 28px;
     text-transform: uppercase;
+    line-height: 1;
 
+    /* грязная белая краска */
     background:
-        linear-gradient(180deg,
-            #ff7a18 0%,
-            #c74312 45%,
-            #7a1f0a 100%),
+        linear-gradient(
+            180deg,
+            #f2f2f2 0%,
+            #d8d8d8 35%,
+            #9a9a9a 100%
+        ),
         repeating-linear-gradient(
             -12deg,
-            rgba(255,255,255,0.12),
-            rgba(255,255,255,0.12) 2px,
-            rgba(0,0,0,0.35) 4px,
-            rgba(0,0,0,0.35) 6px
+            rgba(0,0,0,0.35),
+            rgba(0,0,0,0.35) 2px,
+            rgba(255,255,255,0.08) 4px,
+            rgba(255,255,255,0.08) 6px
         );
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
     text-shadow:
-        0 2px 0 rgba(0,0,0,.8),
-        0 14px 35px rgba(0,0,0,.9);
+        0 2px 0 rgba(0,0,0,0.9),
+        0 18px 40px rgba(0,0,0,0.95);
+
+    animation: fadeIn 3.5s ease forwards;
+}
+
+/* 2033 — ржавчина */
+.title span {
+    display: inline-block;
+    margin-left: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ff8a1e 0%,
+            #c24a12 45%,
+            #6f1c07 100%
+        ),
+        repeating-linear-gradient(
+            -10deg,
+            rgba(0,0,0,0.45),
+            rgba(0,0,0,0.45) 2px,
+            rgba(255,255,255,0.1) 4px,
+            rgba(255,255,255,0.1) 6px
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* ================= QUOTE ================= */
 .quote {
-    font-size: 22px;
+    font-size: 20px;
     line-height: 1.6;
-    max-width: 780px;
-    margin: 0 auto 24px;
-    color: rgba(200,200,200,0.75);
+    max-width: 760px;
+    margin: 0 auto 26px;
+    color: rgba(200,200,200,0.7);
+
     opacity: 0;
-    transition: opacity 1.2s ease;
+    transition: opacity 1.6s ease;
 }
-.quote.show { opacity: 1; }
+.quote.show {
+    opacity: 1;
+}
 
 /* ================= DOTS ================= */
 .dots span {
@@ -124,7 +145,7 @@ body::after {
     width: 6px;
     height: 6px;
     margin: 0 6px;
-    background: rgba(180,90,40,.35);
+    background: rgba(160,80,40,0.35);
     border-radius: 50%;
     animation: dot 1.8s infinite;
 }
@@ -133,7 +154,7 @@ body::after {
 
 @keyframes dot {
     0%,100%{ opacity:.2 }
-    50%{ opacity:.9 }
+    50%{ opacity:.85 }
 }
 
 /* ================= FOOTER ================= */
@@ -145,7 +166,13 @@ body::after {
     text-align: center;
     font-size: 12px;
     letter-spacing: 5px;
-    color: rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.22);
+}
+
+/* ================= ANIM ================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
@@ -158,22 +185,14 @@ body::after {
 
 <div class="hero">
 
-<!-- METRO SYMBOL (SVG, НИЧЕГО НЕ ГРУЗИТСЯ) -->
-<div class="metro">
-<svg viewBox="0 0 256 256" width="64" height="64">
-  <path d="M48 48h160v96c0 32-20 60-50 70l-30 12-30-12c-30-10-50-38-50-70V48z"
-        fill="#8f0f0f"/>
-  <path d="M80 176V96h24l24 36 24-36h24v80h-24v-44l-24 36-24-36v44H80z"
-        fill="#eee"/>
-</svg>
+<div class="title">
+    METRO <span>2033</span>
 </div>
-
-<div class="title">METRO&nbsp;2033</div>
 
 <div class="quote" id="quote"></div>
 
 <div class="dots">
-  <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
 </div>
 
 </div>
@@ -187,28 +206,28 @@ body::after {
 <script>
 const quotes = [
  "«Внизу мы не ищем света — здесь учатся не выдавать его.»",
- "«Тишина в тоннелях опаснее выстрела.»",
- "«Метро — не убежище. Это проверка.»",
- "«Страх здесь — навык выживания.»",
+ "«Тишина опаснее выстрела.»",
+ "«Метро не про спасение. Оно про выживание.»",
  "«Каждый шаг слышит тьма.»",
- "«Назад дороги нет.»",
- "«Выживает тот, кто идёт тихо.»"
+ "«Здесь нет героев.»",
+ "«Надежда — это шум.»",
+ "«Назад дороги нет.»"
 ];
 
 const q = document.getElementById("quote");
 let i = 0;
 
 function nextQuote(){
-  q.classList.remove("show");
-  setTimeout(()=>{
-    q.textContent = quotes[i];
-    q.classList.add("show");
-    i = (i + 1) % quotes.length;
-  }, 800);
+    q.classList.remove("show");
+    setTimeout(()=>{
+        q.textContent = quotes[i];
+        q.classList.add("show");
+        i = (i + 1) % quotes.length;
+    }, 900);
 }
 
 nextQuote();
-setInterval(nextQuote, 20000); // долгий, давящий ритм
+setInterval(nextQuote, 22000); // медленно, давяще
 </script>
 
 </body>
