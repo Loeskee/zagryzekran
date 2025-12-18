@@ -2,236 +2,206 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>METRO 2033</title>
+<title>METRO 2033 — Loading</title>
 
 <style>
-/* ================= BASE ================= */
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 html, body {
     width: 100%;
     height: 100%;
-    margin: 0;
-    background: #020202;
-    font-family: Arial, Helvetica, sans-serif;
+    background: #000;
     overflow: hidden;
+    font-family: 'PT Sans', sans-serif;
 }
 
-/* ================= CENTER ================= */
-.screen {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-}
-.cell {
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    text-align: center;
-}
-
-/* ================= LIVING DARKNESS ================= */
+/* ===== BACKGROUND ===== */
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: radial-gradient(
-        circle at center,
-        rgba(0,0,0,0.35) 0%,
-        rgba(0,0,0,0.7) 55%,
-        rgba(0,0,0,0.95) 100%
-    );
-    animation: darknessBreath 18s ease-in-out infinite;
-    pointer-events: none;
-}
-
-@keyframes darknessBreath {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(0.92); }
-    100% { filter: brightness(1); }
-}
-
-/* ================= DUST ================= */
-body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
     background:
+        radial-gradient(circle at center, rgba(255,255,255,0.04), transparent 60%),
         repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0.02),
-            rgba(255,255,255,0.02) 1px,
-            transparent 1px,
-            transparent 4px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0,0,0,0.45),
-            rgba(0,0,0,0.45) 2px,
+            -45deg,
+            rgba(255,255,255,0.015),
+            rgba(255,255,255,0.015) 2px,
             transparent 2px,
-            transparent 26px
+            transparent 8px
         );
-    opacity: 0.6;
+    animation: bgMove 40s linear infinite;
     pointer-events: none;
 }
 
-/* ================= CONTENT ================= */
-.hero {
-    max-width: 960px;
-    margin: 0 auto;
-    padding-bottom: 140px;
+@keyframes bgMove {
+    from { background-position: 0 0; }
+    to   { background-position: 400px 400px; }
 }
 
-/* ================= TITLE ================= */
+/* ===== CENTER ===== */
+.wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
+    max-width: 900px;
+}
+
+/* ===== TITLE ===== */
 .title {
     font-size: 96px;
-    letter-spacing: 14px;
-    margin: 0 0 36px;
-    text-transform: uppercase;
-    color: #e3e3e3;
-
-    text-shadow: -1px 1px 0 rgba(0,0,0,0.9);
-    animation:
-        fadeIn 4s ease forwards,
-        textDrift 9s ease-in-out infinite;
-}
-
-@keyframes textDrift {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(-1px); }
-    100% { transform: translateX(0); }
+    letter-spacing: 12px;
+    font-weight: 700;
+    color: #bfbfbf;
+    text-shadow:
+        0 0 10px rgba(0,0,0,0.8),
+        0 0 30px rgba(0,0,0,0.8);
 }
 
 .title span {
-    margin-left: 24px;
-    color: #b45724;
+    color: #b06a20;
 }
 
-/* ================= QUOTE ================= */
+/* ===== QUOTE ===== */
 .quote {
-    font-size: 19px;
-    line-height: 1.65;
-    max-width: 780px;
-    margin: 0 auto 28px;
-    color: rgba(185,185,185,0.65);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.95);
-
+    margin-top: 30px;
+    font-size: 26px;
+    color: rgba(220,220,220,0.85);
+    min-height: 80px;
     opacity: 0;
-    transition: opacity 2.2s ease;
-}
-.quote.show {
-    opacity: 1;
-    animation: flicker 12s infinite;
+    transition: opacity 2s ease;
 }
 
-@keyframes flicker {
-    0%, 100% { opacity: 1; }
-    94% { opacity: 1; }
-    95% { opacity: 0.75; }
-    96% { opacity: 1; }
-    97% { opacity: 0.85; }
+/* ===== DOTS ===== */
+.dots {
+    margin-top: 20px;
 }
 
-/* ================= DOTS ================= */
 .dots span {
     display: inline-block;
     width: 6px;
     height: 6px;
-    margin: 0 6px;
-    background: rgba(120,60,30,0.45);
+    margin: 0 4px;
+    background: rgba(255,255,255,0.2);
     border-radius: 50%;
-    animation: dot 2.2s infinite;
-}
-.dots span:nth-child(2){ animation-delay:.5s }
-.dots span:nth-child(3){ animation-delay:1s }
-
-@keyframes dot {
-    0%,100%{ opacity:.2 }
-    50%{ opacity:.95 }
 }
 
-/* ================= FOOTER ================= */
+.dots span.active {
+    background: #b06a20;
+}
+
+/* ===== FOOTER ===== */
 .footer {
     position: fixed;
-    bottom: 18px;
-    left: 0;
+    bottom: 20px;
     width: 100%;
     text-align: center;
     font-size: 12px;
-    letter-spacing: 5px;
-    color: rgba(255,255,255,0.22);
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.15);
 }
 
-/* ================= ANIMS ================= */
+/* ===== FADE IN ===== */
+.fade-in {
+    animation: fadeIn 3s ease forwards;
+}
+
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<table class="screen">
-<tr>
-<td class="cell">
+<div class="wrapper fade-in">
+    <div class="title">
+        METRO <span>2033</span>
+    </div>
 
-<div class="hero">
+    <div id="quote" class="quote"></div>
 
-<div class="title">
-    METRO <span>2033</span>
+    <div class="dots" id="dots"></div>
 </div>
 
-<div class="quote" id="quote"></div>
-
-<div class="dots">
-    <span></span><span></span><span></span>
+<div class="footer">
+    OLD CLASSIC
 </div>
-
-</div>
-
-</td>
-</tr>
-</table>
-
-<div class="footer">OLD&nbsp;CLASSIC</div>
 
 <script>
 const quotes = [
- "«Внизу мы не ищем света — здесь учатся не выдавать его.»",
- "«Метро не про надежду. Метро про выживание.»",
- "«Тишина здесь опаснее выстрела.»",
- "«Каждый шаг слышит тьма.»",
- "«Назад дороги нет.»",
- "«Здесь нет героев — только те, кто дожил.»",
- "«Свет привлекает тех, кто живёт во тьме.»",
- "«Мы выжили не потому, что были сильнее.»",
- "«Метро помнит каждого, кто остался наверху.»",
- "«Тот, кто шумит — долго не живёт.»",
- "«Здесь не спрашивают, откуда ты. Здесь смотрят — дышишь ли.»",
- "«Иногда тишина кричит громче сирен.»",
- "«Метро не про страх. Оно про привычку к нему.»",
- "«Мы не ищем выхода. Мы ищем утро.»",
- "«Выход есть не для всех.»",
- "«Под землёй правды больше, чем света.»",
- "«Каждый патрон — это чья-то жизнь.»",
- "«Метро не про войну. Метро про последствия.»",
- "«Наверху был конец. Внизу — продолжение.»",
- "«Здесь живут те, кто не смог умереть.»"
+  "Здесь ждут.",
+  "Наверху был выбор. Внизу — только время.",
+  "Метро не спасает. Оно отсрочивает конец.",
+  "Если ты слышишь тишину — значит опасность рядом.",
+  "Свет здесь — не надежда. Свет — приманка.",
+  "Страх — не враг. Враг — беспечность.",
+  "Каждый тоннель когда-то станет могилой.",
+  "Здесь учатся не выживать, а терпеть.",
+  "Метро помнит всех. Даже тех, кто забыт.",
+  "Тишина — это пауза перед решением.",
+  "Надежда — редкий гость под землёй.",
+  "Воздух здесь дороже слов.",
+  "Если ты здесь — значит выхода уже не было.",
+  "Метро не принимает героев. Только выживших.",
+  "Чем глубже — тем честнее.",
+  "Наверху умер мир. Внизу умерли иллюзии.",
+  "Каждый шаг — это договор со смертью.",
+  "Здесь не спрашивают, кем ты был.",
+  "Метро не прощает ошибок. Оно их запоминает.",
+  "Ожидание — самая долгая форма страха.",
+  "Те, кто спешил, уже не вернулись.",
+  "Смерть здесь не событие. Она фон.",
+  "Метро дышит медленно. Как умирающий.",
+  "Выход есть всегда. Но не для всех.",
+  "Здесь не ищут свет — здесь учатся его не выдавать.",
+  "Глубина стирает имена.",
+  "Каждый поезд уносит чью-то надежду.",
+  "Если ты выжил — это временно."
 ];
 
-const q = document.getElementById("quote");
-let i = 0;
+const quoteEl = document.getElementById("quote");
+const dotsEl  = document.getElementById("dots");
 
-function nextQuote(){
-    q.classList.remove("show");
-    setTimeout(()=>{
-        q.textContent = quotes[i];
-        q.classList.add("show");
-        i = (i + 1) % quotes.length;
-    }, 1200);
+let index = 0;
+
+// create dots
+quotes.forEach((_, i) => {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dotsEl.appendChild(dot);
+});
+
+const dots = dotsEl.querySelectorAll("span");
+
+function showQuote() {
+    quoteEl.style.opacity = 0;
+
+    setTimeout(() => {
+        quoteEl.textContent = quotes[index];
+        quoteEl.style.opacity = 1;
+
+        dots.forEach(d => d.classList.remove("active"));
+        dots[index].classList.add("active");
+
+        index = (index + 1) % quotes.length;
+    }, 2000);
 }
 
-nextQuote();
-setInterval(nextQuote, 30000);
+// first
+showQuote();
+
+// interval — медленно, давяще
+setInterval(showQuote, 15000);
 </script>
 
 </body>
