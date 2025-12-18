@@ -60,8 +60,8 @@
             transform: translate(-50%, -50%);
             width: 95%;
             max-width: 1100px;
-            height: 90vh; /* Уменьшил высоту */
-            max-height: 90vh; /* Добавил максимальную высоту */
+            height: 90vh;
+            max-height: 90vh;
             background: 
                 linear-gradient(135deg, 
                     rgba(15, 8, 4, 0.95) 0%,
@@ -77,7 +77,7 @@
             overflow: hidden;
             display: grid;
             grid-template-columns: 1fr 350px;
-            grid-template-rows: 80px 1fr 70px; /* Увеличил высоту футера */
+            grid-template-rows: 80px 1fr 70px;
             gap: 0;
         }
 
@@ -131,7 +131,7 @@
             border-right: 1px solid #301010;
             z-index: 2;
             background: rgba(8, 4, 2, 0.6);
-            height: calc(100% - 0px); /* Фиксированная высота */
+            height: calc(100% - 0px);
         }
 
         .log-entry {
@@ -191,7 +191,7 @@
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 15px;
-            height: calc(100% - 0px); /* Фиксированная высота */
+            height: calc(100% - 0px);
         }
 
         .sensor-group {
@@ -215,8 +215,8 @@
         }
 
         .circular-gauge {
-            width: 110px; /* Уменьшил размер */
-            height: 110px; /* Уменьшил размер */
+            width: 110px;
+            height: 110px;
             margin: 0 auto 10px;
             position: relative;
         }
@@ -270,7 +270,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #a04040;
-            font-size: 1rem; /* Уменьшил размер шрифта */
+            font-size: 1rem;
             z-index: 3;
             text-shadow: 0 0 5px rgba(160, 64, 64, 0.3);
         }
@@ -278,7 +278,7 @@
         .gauge-label {
             text-align: center;
             color: #703030;
-            font-size: 0.8rem; /* Уменьшил размер шрифта */
+            font-size: 0.8rem;
             margin-top: 5px;
         }
 
@@ -288,7 +288,7 @@
         }
 
         .linear-label {
-            font-size: 0.75rem; /* Уменьшил размер шрифта */
+            font-size: 0.75rem;
             color: #804040;
             margin-bottom: 5px;
             display: flex;
@@ -315,18 +315,18 @@
             box-shadow: 0 0 5px rgba(160, 48, 48, 0.3);
         }
 
-        /* Футер - ПЕРЕДЕЛАН */
+        /* Футер */
         .monitor-footer {
             grid-column: 1 / -1;
             background: rgba(8, 4, 2, 0.95);
             border-top: 2px solid #301010;
-            padding: 12px 30px; /* Уменьшил отступы */
+            padding: 12px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             z-index: 2;
-            height: 70px; /* Фиксированная высота */
-            min-height: 70px; /* Минимальная высота */
+            height: 70px;
+            min-height: 70px;
             position: relative;
         }
 
@@ -418,6 +418,32 @@
             z-index: 3;
             animation: breathCycle 8s infinite;
             opacity: 0.2;
+        }
+
+        /* Кнопка управления звуком */
+        #soundToggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(10, 5, 2, 0.85);
+            color: #a04040;
+            padding: 10px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-family: 'Courier New';
+            font-size: 12px;
+            border: 1px solid #401010;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            transition: all 0.3s;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+
+        #soundToggle:hover {
+            background: rgba(15, 8, 4, 0.95);
+            color: #c05050;
+            border-color: #c05050;
         }
 
         /* Анимации */
@@ -547,6 +573,13 @@
                 text-align: center;
                 max-width: 100%;
             }
+            
+            #soundToggle {
+                bottom: 10px;
+                left: 10px;
+                padding: 8px 12px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -564,7 +597,7 @@
         
         <!-- Заголовок -->
         <div class="monitor-header">
-            <div class="title-main">ПУЛЬТ УПРАВЛЕНИЯ СТАНЦИИ </div>
+            <div class="title-main">ПУЛЬТ УПРАВЛЕНИЯ СТАНЦИИ "ПОЛИС"</div>
             <div class="title-sub">МОСКОВСКИЙ МЕТРОПОЛИТЕН • СЕКТОР 7 • АВАРИЙНЫЙ РЕЖИМ</div>
         </div>
         
@@ -676,7 +709,7 @@
             </div>
         </div>
         
-        <!-- Футер - ИСПРАВЛЕН -->
+        <!-- Футер -->
         <div class="monitor-footer">
             <div class="countdown-container">
                 <div class="countdown-label">ДО ОТКАЗА СИСТЕМ:</div>
@@ -685,6 +718,15 @@
             <div class="status-indicator" id="status">АВАРИЙНЫЙ РЕЖИМ • СЕКТОР 7 НЕБЕЗОПАСЕН</div>
         </div>
     </div>
+
+    <!-- Аудиоплеер -->
+    <audio id="ambientAudio" loop preload="auto" style="display: none;">
+        <source src="sounds/mbient-of-a-really-dark-place-184183.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает аудио элемент.
+    </audio>
+    
+    <!-- Кнопка включения звука -->
+    <div id="soundToggle">🔇 ВКЛЮЧИТЬ ЗВУК</div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -952,7 +994,106 @@
                 }, 10000);
             }
             
-            // Инициализация
+            // ========== УПРАВЛЕНИЕ ЗВУКОМ ==========
+            const audio = document.getElementById('ambientAudio');
+            const soundToggle = document.getElementById('soundToggle');
+            
+            let audioInitialized = false;
+            let audioError = false;
+            
+            function tryPlayAudio() {
+                if (!audioInitialized && !audioError) {
+                    audio.volume = 0.3; // Громкость 30%
+                    audio.play().then(() => {
+                        console.log("Атмосферный звук запущен");
+                        soundToggle.style.display = 'none';
+                        audioInitialized = true;
+                        // Добавляем сообщение в лог
+                        setTimeout(() => {
+                            addLogMessage("> СИСТЕМА: Атмосферное аудио активировано • УРОВЕНЬ ГРОМКОСТИ: 30%", "system");
+                        }, 1000);
+                    }).catch(error => {
+                        console.log("Автовоспроизведение заблокировано. Требуется клик пользователя.", error);
+                        soundToggle.style.display = 'block';
+                        soundToggle.innerHTML = '🔇 ВКЛЮЧИТЬ ЗВУК';
+                    });
+                }
+            }
+            
+            // Показать кнопку звука через 3 секунды если звук не запустился
+            setTimeout(() => {
+                if (!audioInitialized && !audioError) {
+                    soundToggle.style.display = 'block';
+                }
+            }, 3000);
+            
+            // Попытка запустить звук при загрузке
+            setTimeout(tryPlayAudio, 1000);
+            
+            // Запуск звука по клику на кнопку
+            soundToggle.addEventListener('click', function() {
+                if (audioError) return;
+                
+                audio.volume = 0.3;
+                audio.play().then(() => {
+                    audioInitialized = true;
+                    this.style.display = 'none';
+                    addLogMessage("> СИСТЕМА: Ручная активация аудио • РЕКОМЕНДУЕТСЯ ИСПОЛЬЗОВАНИЕ НАУШНИКОВ", "system");
+                }).catch(error => {
+                    console.error("Ошибка воспроизведения аудио:", error);
+                    this.innerHTML = '❌ ОШИБКА АУДИО';
+                    audioError = true;
+                });
+            });
+            
+            // Запуск звука при любом клике на странице
+            document.addEventListener('click', function(e) {
+                if (!audioInitialized && !audioError && e.target.id !== 'soundToggle') {
+                    tryPlayAudio();
+                }
+            });
+            
+            // Управление громкостью Ctrl + колесико мыши
+            document.addEventListener('wheel', function(e) {
+                if (e.ctrlKey && audioInitialized) {
+                    e.preventDefault();
+                    if (e.deltaY < 0) {
+                        audio.volume = Math.min(1, audio.volume + 0.1);
+                    } else {
+                        audio.volume = Math.max(0.1, audio.volume - 0.1);
+                    }
+                    soundToggle.innerHTML = `🔊 ${Math.round(audio.volume * 100)}%`;
+                    soundToggle.style.display = 'block';
+                    setTimeout(() => {
+                        if (audioInitialized) soundToggle.style.display = 'none';
+                    }, 1000);
+                }
+            }, { passive: false });
+            
+            // Автоматическое включение звука при движении мыши
+            let mouseMoveCount = 0;
+            document.addEventListener('mousemove', function() {
+                mouseMoveCount++;
+                if (mouseMoveCount === 5 && !audioInitialized && !audioError) {
+                    tryPlayAudio();
+                }
+            });
+            
+            // Проверка доступности аудиофайла
+            audio.addEventListener('error', function(e) {
+                console.error("Ошибка загрузки аудиофайла:", e);
+                audioError = true;
+                soundToggle.innerHTML = '❌ ФАЙЛ АУДИО НЕ НАЙДЕН';
+                soundToggle.style.display = 'block';
+                soundToggle.style.cursor = 'not-allowed';
+                addLogMessage("> СИСТЕМА: ОШИБКА ЗАГРУЗКИ АУДИОФАЙЛА • ПУТЬ: /sounds/mbient-of-a-really-dark-place-184183.mp3", "alert");
+            });
+            
+            audio.addEventListener('canplaythrough', function() {
+                console.log("Аудиофайл готов к воспроизведению");
+            });
+            
+            // ========== ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ ==========
             createCondensationDrops();
             createFlies();
             cycleSystemMessages();
@@ -986,10 +1127,10 @@
             });
             
             // Движение мыши
-            let mouseMoveCount = 0;
+            let mouseMoveCount2 = 0;
             document.addEventListener('mousemove', function() {
-                mouseMoveCount++;
-                if (mouseMoveCount % 50 === 0 && Math.random() > 0.7) {
+                mouseMoveCount2++;
+                if (mouseMoveCount2 % 50 === 0 && Math.random() > 0.7) {
                     addLogMessage("> ДАТЧИКИ ДВИЖЕНИЯ: ОБНАРУЖЕНО ПЕРЕМЕЩЕНИЕ В КОНТРОЛЬНОЙ КОМНАТЕ", "system");
                 }
             });
